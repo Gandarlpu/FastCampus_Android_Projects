@@ -21,7 +21,7 @@ import com.google.firebase.storage.ktx.storage
 import fastcampus.part3.chapter06.DBKey.Companion.DB_ARTICLES
 import fastcampus.part3.chapter06.R
 
-class ArticleAddActivity : AppCompatActivity() {
+class ArticleAddActivity() : AppCompatActivity() {
 
     private var selectedUri : Uri? = null
     private val auth : FirebaseAuth by lazy {
@@ -55,6 +55,7 @@ class ArticleAddActivity : AppCompatActivity() {
             }
         }
 
+        // 등록하기 버튼
         findViewById<Button>(R.id.submitButton).setOnClickListener {
             val title = findViewById<EditText>(R.id.titleEditText).text.toString()
             val price = findViewById<EditText>(R.id.priceEditText).text.toString()
