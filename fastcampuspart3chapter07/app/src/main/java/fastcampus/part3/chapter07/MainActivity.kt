@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
+import androidx.viewpager2.widget.ViewPager2
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -22,6 +23,10 @@ class MainActivity : AppCompatActivity() , OnMapReadyCallback{
     private val mapView : MapView by lazy {
         findViewById(R.id.mapView)
     }
+    private val viewPager : ViewPager2 by lazy {
+        findViewById(R.id.houseViewPager)
+    }
+    private val viewPagerAdapter = HouseViewPagerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +39,20 @@ class MainActivity : AppCompatActivity() , OnMapReadyCallback{
         // 따라서 MainActivity가 OnMapReadyCallback의 구현체가 됨 = this로 callback가능
         mapView.getMapAsync(this)
 
+        viewPager.adapter = viewPagerAdapter
+
+        // ViewPager클릭 이벤트
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+
+                val selectedHouseModel = viewPagerAdapter.currentList[position]
+                val cameraUpdate = CameraUpdate.scrollTo(LatLng(selectedHouseModel.lat , selectedHouseModel.lng))
+                    .animate(CameraAnimation.Easing)
+
+                naverMap.moveCamera(cameraUpdate)
+            }
+        })
     }
 
     override fun onMapReady(map : NaverMap) {
